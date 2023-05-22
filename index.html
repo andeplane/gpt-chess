@@ -63,6 +63,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.2/chess.js"></script>
     <script>
         var game = new Chess();
+        window.game = game
 
         function drawBoard() {
             var chessboard = document.getElementById('chessboard');
@@ -112,7 +113,12 @@
                     return
                 }
             }
+            if (game.turn() !== game.get(toChessNotation(i, j)).color) {
+                return
+            }
+            
             selectedPiece = [i, j];
+            window.selectedPiece = selectedPiece
             event.stopPropagation();
         }
 
@@ -126,6 +132,7 @@
                 if (move === null) return; // illegal move
 
                 selectedPiece = null;
+                window.selectedPiece = selectedPiece
                 drawBoard();
                 updateStatus();
             }
