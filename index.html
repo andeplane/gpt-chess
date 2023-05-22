@@ -104,8 +104,9 @@
         }
 
         var selectedPiece = null;
-
+        var selectedDiv = null;
         function onPieceClick(i, j, event) {
+            
             if (selectedPiece) {
                 var oldSelectedPiece = game.get(toChessNotation(selectedPiece[0], selectedPiece[1]));
                 var newSelectedPiece = game.get(toChessNotation(i, j));
@@ -118,6 +119,11 @@
             }
             
             selectedPiece = [i, j];
+            if (selectedDiv) {
+                selectedDiv.classList.remove('selected');
+            }
+            event.target.classList.add('selected');
+            selectedDiv = event.target
             window.selectedPiece = selectedPiece
             event.stopPropagation();
         }
@@ -132,6 +138,8 @@
                 if (move === null) return; // illegal move
 
                 selectedPiece = null;
+                selectedDiv.classList.remove('selected');
+                selectedDiv = null
                 window.selectedPiece = selectedPiece
                 drawBoard();
                 updateStatus();
