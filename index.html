@@ -37,6 +37,22 @@
             text-align: center;
             font-size: 24px;
         }
+
+        @font-face {
+            font-family: 'Chess Merida';
+            src: url('ChessMerida.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        .piece {
+            font-family: 'Chess Merida', monospace;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 40px;
+        }
     </style>
 </head>
 <body>
@@ -59,7 +75,8 @@
                     if (chessPiece) {
                         var pieceElement = document.createElement('div');
                         pieceElement.className = 'piece';
-                        pieceElement.innerHTML = chessPiece.type.toUpperCase() + (chessPiece.color === 'w' ? 'W' : 'B');
+                        // pieceElement.innerHTML = chessPiece.type.toUpperCase() + (chessPiece.color === 'w' ? 'W' : 'B');
+                        pieceElement.innerHTML = pieceToChar(game.get(toChessNotation(i, j)));
                         pieceElement.onclick = function(i, j) {
                             return function(event) {
                                 onPieceClick(i, j, event);
@@ -113,6 +130,25 @@
         function updateStatus() {
             var status = document.getElementById('status');
             status.innerHTML = "Turn: " + (game.turn() === 'w' ? 'White' : 'Black');
+        }
+
+        function pieceToChar(piece) {
+            if (piece === null) return '';
+            var pieceToCharMap = {
+                'p': '\u265F',
+                'r': '\u265C',
+                'n': '\u265E',
+                'b': '\u265D',
+                'q': '\u265B',
+                'k': '\u265A',
+                'P': '\u2659',
+                'R': '\u2656',
+                'N': '\u2658',
+                'B': '\u2657',
+                'Q': '\u2655',
+                'K': '\u2654'
+            };
+            return pieceToCharMap[piece.color === "w" ? piece.type.toUpperCase() : piece.type];
         }
 
         drawBoard();
