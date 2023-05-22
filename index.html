@@ -59,6 +59,7 @@
 <body>
     <div id="chessboard"></div>
     <div id="status"></div>
+    <button id="restartButton" onclick="restartGame()">Restart Game</button>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.2/chess.js"></script>
     <script>
@@ -150,9 +151,45 @@
             return String.fromCharCode(j + 97) + (8 - i);
         }
 
+        function restartGame() {
+            game.reset();
+            drawBoard();
+            updateStatus();
+            enableBoardClicks();
+            selectedDiv.classList.remove('selected');
+            selectedDiv = null;
+        }
+
+        function enableBoardClicks() {
+            var squares = document.getElementsByClassName('chess-square');
+            for (var i = 0; i < squares.length; i++) {
+                squares[i].onclick = function(i, j) {
+                    return function() {
+                        onSquareClick(i, j);
+                    };
+                }(Math.floor(i / 8), i % 8);
+            }
+        }
+
         function updateStatus() {
             var status = document.getElementById('status');
-            status.innerHTML = "Turn: " + (game.turn() === 'w' ? 'White' : 'Black');
+            var gameOverMessage = '';
+
+            if (game.in_checkmate()) {
+                gameOverMessage = 'Checkmate! ' + (game.turn() === 'w' ? 'Black' : 'White') + ' wins!';
+            } else if (game.in_draw()) {
+                gameOverMessage = 'Draw!';
+            } else {
+                status.innerHTML = "Turn: " + (game.turn() === 'w' ? 'White' : 'Black');
+                return;
+            }
+
+            status.innerHTML = gameOverMessage;
+            // Disable click events on the board when the game is over
+            var squares = document.getElementsByClassName('chess-square');
+            for (var i = 0; i < squares.length; i++) {
+                squares[i].onclick = null;
+            }
         }
 
         function pieceToChar(piece) {
