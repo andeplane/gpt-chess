@@ -105,6 +105,13 @@
         var selectedPiece = null;
 
         function onPieceClick(i, j, event) {
+            if (selectedPiece) {
+                var oldSelectedPiece = game.get(toChessNotation(selectedPiece[0], selectedPiece[1]));
+                var newSelectedPiece = game.get(toChessNotation(i, j));
+                if (oldSelectedPiece.color !== newSelectedPiece.color) {
+                    return
+                }
+            }
             selectedPiece = [i, j];
             event.stopPropagation();
         }
